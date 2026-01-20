@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chemical Fragrance Finder</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f4f7;
+            text-align: center;
+            padding-top: 40px; /* Reduced padding */
+        }
+        h1 {
+            color: #333;
+        }
+        .input-section {
+            margin-top: 20px; /* Reduced margin */
+        }
+        form {
+            display: inline-block; /* Keep form inline */
+        }
+        input {
+            padding: 10px;
+            width: 300px;
+            border-radius: 10px;
+            border: 1px solid #aaa;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005ea3;
+        }
+        .process-button {
+            background-color: #ffc107;
+            color: #212529;
+            margin-left: 10px; /* Space from main form */
+        }
+        .process-button:hover {
+            background-color: #e0a800;
+        }
+        .save-all-button {
+            background-color: #28a745; /* Green color */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            padding: 12px 20px; /* Make it stand out more */
+        }
+        .save-all-button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .field {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+        .label {
+            font-weight: bold;
+            color: #333;
+        }
+        .value {
+            margin-left: 5px;
+            font-weight: bold;
+            color: #0078d7;
+            background: #e0f0ff;
+            padding: 3px 6px;
+            border-radius: 6px;
+        }
+        .message {
+            margin-top:20px; 
+            padding:10px; 
+            background:#d4edda; 
+            color:#155724; 
+            border-radius:5px; 
+            width:60%; 
+            margin:auto;
+        }
+        /* Table Styles */
+        .table-container {
+            margin-top: 40px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            /* Removed: border: 1px solid #ddd; */
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #0078d7;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e8f4fd;
+        }
+        .no-results {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            padding: 20px;
+        }
+        /* Style for input fields in the table */
+        table input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chemical Fragrance Finder</h1>
+    
+    <!-- Input Section -->
+    <div class="input-section">
+        <form method="POST">
+            <button type="submit" name="process_unscraped" class="process-button">Fetch Data</button>
+        </form>
+    </div>
+
+    {% if message %}
+        <div class="message">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <!-- Table Section for Processed Results -->
+    {% if chemicals %}
+        <div class="table-container">
+            <h2>Data Processed in Current Run</h2>
+            <!-- Wrap the table in a form for the Save All button -->
+            <form method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Chemical Name</th>
+                            <th>Note</th>
+                            <th>Odour</th>
+                            <th>pH</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for chemical in chemicals %}
+                        <tr>
+                            <td>
+                                <input type="hidden" name="chemical_name" value="{{ chemical.chemical_name }}">
+                                {{ chemical.chemical_name }}
+                            </td>
+                            <td><input type="text" name="note" value="{{ chemical.note or '' }}"></td>
+                            <td><input type="text" name="odour" value="{{ chemical.odour or '' }}"></td>
+                            <td><input type="text" name="pH" value="{{ chemical.pH or '' }}"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Single Save All Button -->
+                <button type="submit" name="save_all" class="save-all-button">Save All Data</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="table-container">
+            <p class="no-results">Click "Fetch Data" to start.</p>
+        </div>
+    {% endif %}
+
+</body>
+</html>
